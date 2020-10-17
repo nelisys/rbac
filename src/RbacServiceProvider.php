@@ -28,10 +28,6 @@ class RbacServiceProvider extends ServiceProvider
         $this->app->bind(StatefulGuard::class, function () {
             return Auth::guard(config('fortify.guard', 'web'));
         });
-
-        config([
-            'auth.providers.users.model' => User::class,
-        ]);
     }
 
     public function boot()
