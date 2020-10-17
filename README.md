@@ -1,8 +1,14 @@
 # Nelisys RBAC for Laravel
 
+<p align="center">
+    <a href="https://packagist.org/packages/nelisys/rbac"><img src="https://poser.pugx.org/nelisys/rbac/d/total.svg" alt="Total Downloads"></a>
+</p>
+
 ## Introduction
 
 Role-Based Access Control for Laravel.
+
+Default the package will use `username` column to authenticate. If you want to use `email` instead, just change `username` to `email` in `config/fortify.php`.
 
 ## Installation
 
@@ -27,6 +33,12 @@ Change `users.model` to `Nelisys\Rbac\Models\User`
             'driver' => 'eloquent',
             'model' => Nelisys\Rbac\Models\User::class,
         ],
+```
+
+Add sanctum config in `.env` file
+
+```
+SANCTUM_STATEFUL_DOMAINS=example.com
 ```
 
 Add Sanctum middleware in `api`.
