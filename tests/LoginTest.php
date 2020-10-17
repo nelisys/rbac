@@ -126,11 +126,44 @@ class LoginTest extends TestCase
     }
 
     /** @test */
+    public function inactive_user_cannot_login_even_with_valid_username_and_password()
+    {
+        $this->loadLaravelMigrations(['--database' => 'testbench']);
+        $this->artisan('migrate', ['--database' => 'testbench'])->run();
+
+        $user = User::forceCreate([
+            'username' => 'alice',
+            'name' => 'Alice',
+            'email' => 'alice@example.com',
+            'password' => bcrypt('secret'),
+            'is_active' => false,
+        ]);
+
+        $data = [
+            $this->username => $user->{$this->username},
+            'password' => 'secret',
+        ];
+
+        $this->json('POST', 'login', $data)
+            ->assertStatus(422)
+            ->assertJson([
+                'message' => 'The given data was invalid.',
+                'errors' => [
+                    $this->username => [
+                        'These credentials do not match our records.',
+                    ],
+                ],
+            ]);
+    }
+
+    /** @test */
     public function user_can_login_with_valid_username_and_password()
     {
         $this->loadLaravelMigrations(['--database' => 'testbench']);
+        $this->artisan('migrate', ['--database' => 'testbench'])->run();
 
         $user = User::forceCreate([
+            'username' => 'alice',
             'name' => 'Alice',
             'email' => 'alice@example.com',
             'password' => bcrypt('secret'),
