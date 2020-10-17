@@ -29,7 +29,7 @@ class AddUsernameAndMoreColumnsToUsersTable extends Migration
                     ->after('username')
                     ->default(true);
 
-            $table->json('details')
+            $table->json('options')
                     ->after('is_active')
                     ->nullable();
         });
@@ -46,7 +46,7 @@ class AddUsernameAndMoreColumnsToUsersTable extends Migration
             $table->dropColumn(
                 'username',
                 'is_active',
-                'details',
+                'options',
             );
         });
     }
