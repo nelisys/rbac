@@ -1,0 +1,30 @@
+{
+    "name": "nelisys/rbac",
+    "description": "Nelisys RBAC for Laravel",
+    "keywords": ["laravel", "rbac", "user", "role", "permission"],
+    "require": {
+        "illuminate/support": "^8.9",
+        "laravel/fortify": "^1.6",
+        "doctrine/dbal": "^2.11"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Nelisys\\Rbac\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Nelisys\\Rbac\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Nelisys\\Rbac\\RbacServiceProvider"
+            ]
+        }
+    }
+}
