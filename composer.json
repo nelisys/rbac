@@ -2,11 +2,18 @@
     "name": "nelisys/rbac",
     "description": "Nelisys RBAC for Laravel",
     "keywords": ["laravel", "rbac", "user", "role", "permission"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Supasin Sae-heng",
+            "email": "supasin@users.noreply.github.com"
+        }
+    ],
     "require": {
-        "illuminate/support": "^8.9",
-        "laravel/fortify": "^1.6",
+        "illuminate/support": "^8.0",
+        "laravel/fortify": "^1.7",
         "doctrine/dbal": "^2.11",
-        "laravel/sanctum": "^2.6"
+        "laravel/sanctum": "^2.8"
     },
     "require-dev": {
         "orchestra/testbench": "^6.2"

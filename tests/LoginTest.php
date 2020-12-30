@@ -13,13 +13,6 @@ class LoginTest extends TestCase
 {
     protected $username;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->username = config('fortify.username', 'email');
-    }
-
     public function tearDown(): void
     {
         Mockery::close();
@@ -43,6 +36,10 @@ class LoginTest extends TestCase
             'database' => ':memory:',
             'prefix'   => '',
         ]);
+
+        $app['config']->set('fortify.username', 'username');
+
+        $this->username = config('fortify.username');
     }
 
     /** @test */
