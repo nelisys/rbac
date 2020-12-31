@@ -13,18 +13,22 @@ class LoginController extends Controller
     {
         $user = $request->authenticate();
 
-        $request->session()->regenerate();
+        if ($request->route()->getPrefix() != 'api') {
+            $request->session()->regenerate();
+        }
 
         return $user;
     }
 
     public function destroy(Request $request)
     {
-        Auth::guard('web')->logout();
+        Auth::guard()->logout();
 
-        $request->session()->invalidate();
+        if ($request->route()->getPrefix() != 'api') {
+            $request->session()->invalidate();
 
-        $request->session()->regenerateToken();
+            $request->session()->regenerateToken();
+        }
 
         return response([], 204);
     }

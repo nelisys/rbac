@@ -1,6 +1,6 @@
 <?php
 
-namespace Nelisys\Rbac\Tests;
+namespace Nelisys\Rbac\Tests\Feature;
 
 use Mockery;
 use Orchestra\Testbench\TestCase;
@@ -8,7 +8,7 @@ use Orchestra\Testbench\TestCase;
 use Nelisys\Rbac\Models\User;
 use Nelisys\Rbac\RbacServiceProvider;
 
-class LoginTest extends TestCase
+class ApiLoginTest extends TestCase
 {
     protected $username;
 
@@ -42,14 +42,14 @@ class LoginTest extends TestCase
     }
 
     /** @test */
-    public function login_requires_fields()
+    public function api_login_requires_fields()
     {
         $data = [
             $this->username => '',
             'password' => '',
         ];
 
-        $this->json('POST', '/login', $data)
+        $this->json('POST', '/api/login', $data)
             ->assertStatus(422)
             ->assertJson([
                 'message' => 'The given data was invalid.',
@@ -65,7 +65,7 @@ class LoginTest extends TestCase
     }
 
     /** @test */
-    public function login_requires_valid_username_and_password()
+    public function api_login_requires_valid_username_and_password()
     {
         $this->loadLaravelMigrations(['--database' => 'testbench']);
 
@@ -74,7 +74,7 @@ class LoginTest extends TestCase
             'password' => 'invalid',
         ];
 
-        $this->json('POST', '/login', $data)
+        $this->json('POST', '/api/login', $data)
             ->assertStatus(422)
             ->assertJson([
                 'message' => 'The given data was invalid.',
@@ -87,7 +87,7 @@ class LoginTest extends TestCase
     }
 
     /** @test */
-    public function too_many_invalid_login_cause_429_response()
+    public function api_too_many_invalid_login_cause_429_response()
     {
         $this->loadLaravelMigrations(['--database' => 'testbench']);
 
@@ -97,13 +97,13 @@ class LoginTest extends TestCase
         ];
 
         // default : 6 attempts within 60 seconds
-        $this->json('POST', '/login', $data)->assertStatus(422);
-        $this->json('POST', '/login', $data)->assertStatus(422);
-        $this->json('POST', '/login', $data)->assertStatus(422);
-        $this->json('POST', '/login', $data)->assertStatus(422);
-        $this->json('POST', '/login', $data)->assertStatus(422);
+        $this->json('POST', '/api/login', $data)->assertStatus(422);
+        $this->json('POST', '/api/login', $data)->assertStatus(422);
+        $this->json('POST', '/api/login', $data)->assertStatus(422);
+        $this->json('POST', '/api/login', $data)->assertStatus(422);
+        $this->json('POST', '/api/login', $data)->assertStatus(422);
 
-        $this->json('POST', '/login', $data)
+        $this->json('POST', '/api/login', $data)
             ->assertStatus(429)
             ->assertJson([
                 'message' => 'The given data was invalid.',
@@ -122,7 +122,7 @@ class LoginTest extends TestCase
     }
 
     /** @test */
-    public function inactive_user_cannot_login_even_with_valid_username_and_password()
+    public function api_inactive_user_cannot_login_even_with_valid_username_and_password()
     {
         $this->loadLaravelMigrations(['--database' => 'testbench']);
         $this->artisan('migrate', ['--database' => 'testbench'])->run();
@@ -153,7 +153,7 @@ class LoginTest extends TestCase
     }
 
     /** @test */
-    public function user_can_login_with_valid_username_and_password()
+    public function api_user_can_login_with_valid_username_and_password()
     {
         $this->loadLaravelMigrations(['--database' => 'testbench']);
         $this->artisan('migrate', ['--database' => 'testbench'])->run();
@@ -170,12 +170,12 @@ class LoginTest extends TestCase
             'password' => 'secret',
         ];
 
-        $this->json('POST', '/login', $data)
+        $this->json('POST', '/api/login', $data)
             ->assertStatus(200);
     }
 
     /** @test */
-    public function logout_should_destroy_user_session()
+    public function api_logout_should_destroy_user_session()
     {
         $this->loadLaravelMigrations(['--database' => 'testbench']);
 
@@ -187,7 +187,7 @@ class LoginTest extends TestCase
 
         $this->actingAs($user);
 
-        $this->json('POST', '/logout')
+        $this->json('POST', '/api/logout')
             ->assertStatus(204);
 
         $this->assertNull(auth()->user());
