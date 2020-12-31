@@ -7,6 +7,7 @@ use Orchestra\Testbench\TestCase;
 
 use Nelisys\Rbac\Models\User;
 use Nelisys\Rbac\RbacServiceProvider;
+use Nelisys\Rbac\Http\Controllers\LoginController;
 
 class ApiLoginTest extends TestCase
 {
@@ -155,6 +156,8 @@ class ApiLoginTest extends TestCase
     /** @test */
     public function api_user_can_login_with_valid_username_and_password()
     {
+        $this->withoutExceptionHandling();
+
         $this->loadLaravelMigrations(['--database' => 'testbench']);
         $this->artisan('migrate', ['--database' => 'testbench'])->run();
 
@@ -170,8 +173,25 @@ class ApiLoginTest extends TestCase
             'password' => 'secret',
         ];
 
+        // mock
+        $mock = Mockery::mock(LoginController::class)
+            ->makePartial();
+
+        $mock->shouldReceive('createToken')
+            ->andReturn('mock-token');
+
+        $this->instance(LoginController::class, $mock);
+
         $this->json('POST', '/api/login', $data)
-            ->assertStatus(200);
+            ->assertStatus(200)
+            ->assertJson([
+                'token' => 'mock-token',
+                'user' => [
+                    'id' => $user->id,
+                    'username' => $user->username,
+                ],
+                'scopes' => ['*'],
+            ]);
     }
 
     /** @test */

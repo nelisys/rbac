@@ -13,23 +13,40 @@ class LoginController extends Controller
     {
         $user = $request->authenticate();
 
-        if ($request->route()->getPrefix() != 'api') {
+        if ($request->route()->getPrefix() == 'api') {
+            $token = $this->createToken($user);
+            $scopes = ['*'];
+        } else {
             $request->session()->regenerate();
+            $token = null;
+            $scopes = [];
         }
 
-        return $user;
+        return [
+            'user' => $user,
+            'token' => $token,
+            'scopes' => $scopes,
+        ];
     }
 
     public function destroy(Request $request)
     {
         Auth::guard()->logout();
 
-        if ($request->route()->getPrefix() != 'api') {
+        if ($request->route()->getPrefix() == 'api') {
+            //
+        } else {
             $request->session()->invalidate();
 
             $request->session()->regenerateToken();
         }
 
         return response([], 204);
+    }
+
+    public function createToken($user)
+    {
+        return $user->createToken('api')
+            ->plainTextToken;
     }
 }
