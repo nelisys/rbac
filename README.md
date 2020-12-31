@@ -56,6 +56,17 @@ Run migrate.
 php artisan migrate
 ```
 
+## Create Test User
+
+Run `php artisan tinker` to create test user.
+
+```
+Nelisys\Rbac\Models\User::create([
+    'username' => 'alice',
+    'password' => bcrypt('secret'),
+]);
+```
+
 ## License
 
 Nelisys RBAC is open-sourced software licensed under the [MIT license](LICENSE.md).

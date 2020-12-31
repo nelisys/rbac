@@ -15,6 +15,10 @@ class AddUsernameAndMoreColumnsToUsersTable extends Migration
     {
 
         Schema::table('users', function (Blueprint $table) {
+            $table->string('name')
+                ->nullable()
+                ->change();
+
             $table->string('email')
                 ->nullable()
                 ->change();
@@ -22,15 +26,15 @@ class AddUsernameAndMoreColumnsToUsersTable extends Migration
             $table->dropUnique('users_email_unique');
 
             $table->string('username')
-                    ->after('password')
-                    ->unique();
+                ->after('id')
+                ->unique();
 
             $table->boolean('is_active')
                     ->after('username')
                     ->default(true);
 
             $table->json('options')
-                    ->after('is_active')
+                    ->after('updated_at')
                     ->nullable();
         });
     }

@@ -37,9 +37,9 @@ class LoginTest extends TestCase
             'prefix'   => '',
         ]);
 
-        $app['config']->set('fortify.username', 'username');
+        $app['config']->set('nelisys.rbac.username', 'username');
 
-        $this->username = config('fortify.username');
+        $this->username = config('nelisys.rbac.username');
     }
 
     /** @test */
@@ -97,7 +97,7 @@ class LoginTest extends TestCase
             'password' => 'invalid',
         ];
 
-        // default : 5 attempts within 60 seconds
+        // default : 6 attempts within 60 seconds
         $this->json('POST', '/login', $data)->assertStatus(422);
         $this->json('POST', '/login', $data)->assertStatus(422);
         $this->json('POST', '/login', $data)->assertStatus(422);
