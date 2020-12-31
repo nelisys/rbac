@@ -2,6 +2,8 @@
 
 namespace Nelisys\Rbac\Tests\Feature;
 
+use Laravel\Sanctum\Sanctum;
+use Laravel\Sanctum\SanctumServiceProvider;
 use Mockery;
 use Orchestra\Testbench\TestCase;
 
@@ -22,6 +24,7 @@ class ApiLoginTest extends TestCase
     {
         return [
             RbacServiceProvider::class,
+            SanctumServiceProvider::class,
         ];
     }
 
@@ -156,8 +159,6 @@ class ApiLoginTest extends TestCase
     /** @test */
     public function api_user_can_login_with_valid_username_and_password()
     {
-        $this->withoutExceptionHandling();
-
         $this->loadLaravelMigrations(['--database' => 'testbench']);
         $this->artisan('migrate', ['--database' => 'testbench'])->run();
 
@@ -173,7 +174,7 @@ class ApiLoginTest extends TestCase
             'password' => 'secret',
         ];
 
-        // mock
+        // mock createToken()
         $mock = Mockery::mock(LoginController::class)
             ->makePartial();
 
@@ -182,6 +183,7 @@ class ApiLoginTest extends TestCase
 
         $this->instance(LoginController::class, $mock);
 
+        // call api
         $this->json('POST', '/api/login', $data)
             ->assertStatus(200)
             ->assertJson([
@@ -197,6 +199,8 @@ class ApiLoginTest extends TestCase
     /** @test */
     public function api_logout_should_destroy_user_session()
     {
+        $this->withoutExceptionHandling();
+
         $this->loadLaravelMigrations(['--database' => 'testbench']);
 
         $user = User::forceCreate([
@@ -205,11 +209,19 @@ class ApiLoginTest extends TestCase
             'password' => bcrypt('secret'),
         ]);
 
-        $this->actingAs($user);
+        Sanctum::actingAs($user);
 
+        // mock createToken()
+        $mock = Mockery::mock(LoginController::class)
+            ->makePartial();
+
+        $mock->shouldReceive('deleteToken')
+            ->once();
+
+        $this->instance(LoginController::class, $mock);
+
+        // call api
         $this->json('POST', '/api/logout')
             ->assertStatus(204);
-
-        $this->assertNull(auth()->user());
     }
 }

@@ -31,14 +31,14 @@ class LoginController extends Controller
 
     public function destroy(Request $request)
     {
-        Auth::guard()->logout();
-
         if ($request->route()->getPrefix() == 'api') {
-            //
+            $this->deleteToken();
         } else {
             $request->session()->invalidate();
 
             $request->session()->regenerateToken();
+
+            Auth::guard('web')->logout();
         }
 
         return response([], 204);
@@ -48,5 +48,14 @@ class LoginController extends Controller
     {
         return $user->createToken('api')
             ->plainTextToken;
+    }
+
+    public function deleteToken()
+    {
+        $user = auth()->user();
+
+        $user->tokens()
+            ->where('id', $user->currentAccessToken()->id)
+            ->delete();
     }
 }

@@ -67,6 +67,52 @@ Nelisys\Rbac\Models\User::create([
 ]);
 ```
 
+## Test API by curl
+
+### API Login
+
+Call `/api/login` to get the token.
+
+```
+$ curl \
+    -H 'X-Requested-With: XMLHttpRequest' \
+    -d 'username=alice&password=secret' \
+    http://example.test/api/login
+```
+
+### API Authorization
+
+Specify header `Authorization: Bearer` with the token return.
+
+Note: Replace `$token` with the token return.
+
+```
+$ curl \
+    -H 'X-Requested-With: XMLHttpRequest' \
+    -H 'Authorization: Bearer $token' \
+    http://example.test/api/user
+
+{
+  "username" : "alice",
+  "id" : 1,
+  ...
+}
+```
+
+### API Logout
+
+Specify header `Authorization: Bearer` with the token return.
+
+Note: Replace `$token` with the token return.
+
+```
+$ curl \
+    -X POST \
+    -H 'X-Requested-With: XMLHttpRequest' \
+    -H 'Authorization: Bearer $token' \
+    http://example.test/api/logout
+```
+
 ## License
 
 Nelisys RBAC is open-sourced software licensed under the [MIT license](LICENSE.md).
