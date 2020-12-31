@@ -2,7 +2,6 @@
 
 namespace Nelisys\Rbac\Tests;
 
-use Laravel\Fortify\FortifyServiceProvider;
 use Mockery;
 use Orchestra\Testbench\TestCase;
 

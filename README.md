@@ -8,7 +8,7 @@
 
 Role-Based Access Control for Laravel.
 
-Default the package will use `username` column to authenticate. If you want to use `email` instead, just change `username` to `email` in `config/fortify.php`.
+Default the package will use `username` column to authenticate. If you want to use `email` instead, just change `username` to `email` in `config/nelisys/rbac.php`.
 
 ## Installation
 

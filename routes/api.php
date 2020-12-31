@@ -2,9 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
-use Nelisys\Rbac\Http\Controllers\ApiLoginController;
+use Nelisys\Rbac\Http\Controllers\TokenController;
 
 Route::group(['middleware' => ['api']], function () {
-    Route::post('/api/login', [ApiLoginController::class, 'store']);
-    Route::post('/api/logout', [ApiLoginController::class, 'destroy']);
+    Route::post('/api/login', [TokenController::class, 'store']);
+    Route::post('/api/logout', [TokenController::class, 'destroy']);
 });
